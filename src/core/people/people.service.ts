@@ -1,26 +1,73 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+
+// DTO's
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 
+// Services
+import { PrismaService } from 'src/db/prisma.service';
+
 @Injectable()
 export class PeopleService {
-  create(createPersonDto: CreatePersonDto) {
-    return 'This action adds a new person';
+  constructor(
+    private readonly prismaService: PrismaService
+  ) {}
+
+  async create(createPersonDto: Prisma.peopleCreateInput): Promise<UpdatePersonDto> {
+    return this.prismaService.people.create({
+      data: createPersonDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all people`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.peopleWhereUniqueInput;
+    where?: Prisma.peopleWhereInput;
+    orderBy?: Prisma.peopleOrderByWithRelationInput;
+  }): Promise<UpdatePersonDto[]> {
+    const {
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    } = params;
+    return this.prismaService.people.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} person`;
+  async findOne(
+    peopleWhereUniqueInput: Prisma.peopleWhereUniqueInput,
+  ): Promise<UpdatePersonDto | null> {
+    return this.prismaService.people.findUnique({
+      where: peopleWhereUniqueInput,
+    });
   }
 
-  update(id: number, updatePersonDto: UpdatePersonDto) {
-    return `This action updates a #${id} person`;
+  async update(params: {
+    where: Prisma.peopleWhereUniqueInput;
+    data: Prisma.peopleUpdateInput;
+  }): Promise<UpdatePersonDto> {
+    const {
+      where,
+      data,
+    } = params;
+    return this.prismaService.people.update({
+      where,
+      data,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} person`;
+  async remove(where: Prisma.peopleWhereUniqueInput): Promise<UpdatePersonDto> {
+    return this.prismaService.people.delete({
+      where,
+    });
   }
 }
