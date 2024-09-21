@@ -17,6 +17,7 @@ export class PeopleService {
   async create(createPersonDto: Prisma.peopleCreateInput): Promise<UpdatePersonDto> {
     return this.prismaService.people.create({
       data: createPersonDto,
+      include: {user: true},
     });
   }
 
@@ -39,6 +40,7 @@ export class PeopleService {
       take,
       cursor,
       where,
+      include: {user: true},
       orderBy,
     });
   }
@@ -48,6 +50,7 @@ export class PeopleService {
   ): Promise<UpdatePersonDto | null> {
     return this.prismaService.people.findUnique({
       where: peopleWhereUniqueInput,
+      include: {user: true},
     });
   }
 
@@ -62,6 +65,7 @@ export class PeopleService {
     return this.prismaService.people.update({
       where,
       data,
+      include: {user: true},
     });
   }
 

@@ -1,5 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { IsEmail, IsNotEmpty, IsString, IsBoolean, IsObject } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
+
+// DTO's
+import { UpdatePersonDto } from "src/core/people/dto/update-person.dto";
 
 export class CreateUserDto {
   @IsEmail()
@@ -14,5 +17,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   active: boolean;
 
-  people: Prisma.peopleUpdateManyWithoutUserNestedInput;
+  people: UpdatePersonDto[];
+
+  // people: Prisma.peopleUpdateManyWithoutUserNestedInput;
 }

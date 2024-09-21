@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 // DTO's
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 // Services
 import { PrismaService } from 'src/db/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -14,11 +15,16 @@ export class UsersService {
     private readonly prismaService: PrismaService
   ) {}
 
-  async create(createUserDto: Prisma.usersCreateInput): Promise<UpdateUserDto> {
+  async create(createUserDto: CreateUserDto): Promise<UpdateUserDto> {
+    const {people, ...rest} = createUserDto;
     const saltOrRounds = 10;
     createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
     return this.prismaService.users.create({
-      data: createUserDto,
+      data: {
+        ...rest,
+        people: {},
+      },
+      include: {people: true},
     });
   }
 
@@ -41,6 +47,7 @@ export class UsersService {
       take,
       cursor,
       where,
+      include: {people: true},
       orderBy,
     });
   }
@@ -50,20 +57,26 @@ export class UsersService {
   ): Promise<UpdateUserDto | null> {
     return this.prismaService.users.findUnique({
       where: userWhereUniqueInput,
+      include: {people: true},
     });
   }
 
   async update(params: {
     where: Prisma.usersWhereUniqueInput;
-    data: Prisma.usersUpdateInput;
+    data: UpdateUserDto;
   }): Promise<UpdateUserDto> {
     const {
       where,
       data,
     } = params;
+    const { people, ...rest } = data;
     return this.prismaService.users.update({
       where,
-      data,
+      data: {
+        ...rest,
+        people: {},
+      },
+      include: {people: true},
     });
   }
 

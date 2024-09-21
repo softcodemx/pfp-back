@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 
 // DTO's
 import { CreatePersonDto } from './dto/create-person.dto';
@@ -18,14 +17,30 @@ export class PeopleController {
   }
 
   @Get()
-  findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.peopleWhereUniqueInput;
-    where?: Prisma.peopleWhereInput;
-    orderBy?: Prisma.peopleOrderByWithRelationInput;
-  }) {
-    return this.peopleService.findAll(params);
+  findAll(
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
+    @Query('search') search?: string,
+    @Query('orderBy') orderBy?: 'asc' | 'desc'
+  ) {
+    const or = search
+      ? {
+          OR: [
+            { name: { contains: search } },
+            { surname: { contains: search } },
+            { id_user: { equals: +search } },
+          ],
+        }
+      : undefined;
+
+    return this.peopleService.findAll({
+      skip: skip || undefined,
+      take: take || undefined,
+      where: { ...or },
+      orderBy: {
+        id_person: orderBy ? orderBy : 'desc',
+      },
+    });
   }
 
   @Get(':id')

@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 
 // DTO's
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -18,14 +17,30 @@ export class RestaurantsController {
   }
 
   @Get()
-  findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.restaurantsWhereUniqueInput;
-    where?: Prisma.restaurantsWhereInput;
-    orderBy?: Prisma.restaurantsOrderByWithRelationInput;
-  }) {
-    return this.restaurantsService.findAll(params);
+  findAll(
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
+    @Query('search') search?: string,
+    @Query('orderBy') orderBy?: 'asc' | 'desc'
+  ) {
+    const or = search
+      ? {
+          OR: [
+            { name: { contains: search } },
+            { gps: { contains: search } },
+            { is_pet_frendly: { equals: search === "true" } },
+          ],
+        }
+      : undefined;
+
+    return this.restaurantsService.findAll({
+      skip: skip || undefined,
+      take: take || undefined,
+      where: { ...or },
+      orderBy: {
+        id_restaurant: orderBy ? orderBy : 'desc',
+      },
+    });
   }
 
   @Get(':id')
