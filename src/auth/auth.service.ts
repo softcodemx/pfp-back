@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 // DTO's
 import { SessionDto } from './dto/session.dto';
@@ -19,8 +20,9 @@ export class AuthService {
     const user: UpdateUserDto = await this.usersService.findOne({email: username});
 
     const { password, ...result } = user;
+    const isMatch = await bcrypt.compare(pass, password);
 
-    if (password !== pass) {
+    if (!isMatch) {
       throw new UnauthorizedException();
     }
 
