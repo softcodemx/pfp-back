@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { UtilsModule } from './utils/utils.module';
 import { EnvsService } from './utils/envs/envs.service';
 import { EnvsEnum } from './utils/envs/envs.enum';
+
+// Modules
 import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
 import { MiddlewaresModule } from './middlewares/middlewares.module';

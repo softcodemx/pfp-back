@@ -1,7 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Prisma } from '@prisma/client';
+
+// DTO's
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+
+// Services
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
@@ -13,22 +18,35 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.usersWhereUniqueInput;
+    where?: Prisma.usersWhereInput;
+    orderBy?: Prisma.usersOrderByWithRelationInput;
+  }) {
+    return this.usersService.findAll(params);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.usersService.findOne({id_user: id});
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update({
+      where: { id_user: id },
+      data: {
+        ...updateUserDto,
+      }
+    });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.usersService.remove({
+      id_user: id,
+    });
   }
 }
