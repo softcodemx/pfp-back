@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 // App
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
 
 const logger: Logger = new Logger('PetFrendly');
 
@@ -11,6 +11,8 @@ async function bootstrap() {
     cors: true,
     logger: ['debug', 'error', 'warn'],
   });
+
+  app.useGlobalPipes(new ValidationPipe());
 
   logger.debug(`${AppModule.host}:${AppModule.port}`);
   await app.listen(AppModule.port, AppModule.host);
