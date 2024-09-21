@@ -1,26 +1,72 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { Prisma } from '@prisma/client';
+
+// DTO's
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+
+// Services
+import { PrismaService } from 'src/db/prisma.service';
 
 @Injectable()
 export class RestaurantsService {
-  create(createRestaurantDto: CreateRestaurantDto) {
-    return 'This action adds a new restaurant';
+  constructor(
+    private readonly prismaService: PrismaService
+  ) {}
+
+  async create(createRestaurantDto: Prisma.restaurantsCreateInput): Promise<UpdateRestaurantDto> {
+    return this.prismaService.restaurants.create({
+      data: createRestaurantDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all restaurants`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.restaurantsWhereUniqueInput;
+    where?: Prisma.restaurantsWhereInput;
+    orderBy?: Prisma.restaurantsOrderByWithRelationInput;
+  }): Promise<UpdateRestaurantDto[]> {
+    const {
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    } = params;
+    return this.prismaService.restaurants.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} restaurant`;
+  async findOne(
+    restaurantsWhereUniqueInput: Prisma.restaurantsWhereUniqueInput,
+  ): Promise<UpdateRestaurantDto | null> {
+    return this.prismaService.restaurants.findUnique({
+      where: restaurantsWhereUniqueInput,
+    });
   }
 
-  update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
-    return `This action updates a #${id} restaurant`;
+  async update(params: {
+    where: Prisma.restaurantsWhereUniqueInput;
+    data: Prisma.restaurantsUpdateInput;
+  }): Promise<UpdateRestaurantDto> {
+    const {
+      where,
+      data,
+    } = params;
+    return this.prismaService.restaurants.update({
+      where,
+      data,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} restaurant`;
+  async remove(where: Prisma.restaurantsWhereUniqueInput): Promise<UpdateRestaurantDto> {
+    return this.prismaService.restaurants.delete({
+      where,
+    });
   }
 }
