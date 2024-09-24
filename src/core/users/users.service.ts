@@ -46,7 +46,11 @@ export class UsersService {
       skip,
       take,
       cursor,
-      where,
+      where: {
+        ...where,  // Incluye cualquier otra condición que se pase en 'where'
+        active: true,  // Filtrar solo los usuarios activos
+        deletedAt: null,  // Asegurarse de que no estén eliminados
+      },
       include: {people: true},
       orderBy,
     });
