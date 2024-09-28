@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpException, HttpStatus } from '@nestjs/common';
 
 // DTO's
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -59,9 +59,15 @@ export class RestaurantsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
+    const restaurantId = parseInt(id, 10);  // Convertimos el ID a número
+  
+    if (isNaN(restaurantId)) {
+      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
+    }
+  
     return this.restaurantsService.remove({
-      id_restaurant: id,
+      id_restaurant: restaurantId,
     });
   }
 }
