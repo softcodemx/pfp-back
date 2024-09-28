@@ -65,8 +65,11 @@ export class RestaurantsService {
   }
 
   async remove(where: Prisma.restaurantsWhereUniqueInput): Promise<UpdateRestaurantDto> {
-    return this.prismaService.restaurants.delete({
+    return this.prismaService.restaurants.update({
       where,
+      data: {
+        deletedAt: new Date(), // Establece la fecha y hora actual para la eliminación lógica
+      },
     });
-  }
+  } 
 }
