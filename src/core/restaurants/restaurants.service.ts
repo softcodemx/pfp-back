@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 // DTO's
@@ -14,19 +14,6 @@ export class RestaurantsService {
   ) {}
 
   async create(createRestaurantDto: Prisma.restaurantsCreateInput): Promise<UpdateRestaurantDto> {
-    //Verificamos si el restarurante existe
-    const existingRestaurant = await this.prismaService.restaurants.findFirst({
-      where: { 
-        name: createRestaurantDto.name,
-      },
-    });
-
-    //Si existe, lanzamos una excepción
-    if (existingRestaurant) {
-      throw new HttpException ('This name restaurant already exists. Please check that the content of this field does not repeat', HttpStatus.CONFLICT);
-    }
-
-    //Si no existe. Se crea el restaurante
     return this.prismaService.restaurants.create({
       data: createRestaurantDto,
     });
