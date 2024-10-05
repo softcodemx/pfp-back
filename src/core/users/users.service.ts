@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
@@ -16,6 +16,17 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UpdateUserDto> {
+    //Verificamos si el usuario existe
+    const existingUsers = await this.prismaService.users.findFirst({
+      where: { 
+        email: createUserDto.email,
+      },
+    });
+
+    //Si existe, lanzamos una excepción
+    if (existingUsers) {
+      throw new HttpException ('This email users already exists. Please check that the content of this field does not repeat', HttpStatus.CONFLICT);
+    }
     const {people, ...rest} = createUserDto;
     const saltOrRounds = 10;
     createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
