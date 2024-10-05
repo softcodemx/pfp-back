@@ -36,7 +36,7 @@ export class RestaurantsController {
     return this.restaurantsService.findAll({
       skip: skip || undefined,
       take: take || undefined,
-      where: { ...or },
+      where: { ...or, deletedAt: null },
       orderBy: {
         id_restaurant: orderBy ? orderBy : 'desc',
       },
