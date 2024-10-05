@@ -27,6 +27,7 @@ export class UsersService {
     if (existingUsers) {
       throw new HttpException ('This email users already exists. Please check that the content of this field does not repeat', HttpStatus.CONFLICT);
     }
+
     const {people, ...rest} = createUserDto;
     const saltOrRounds = 10;
     createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
