@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException } from '@nestjs/common';
 
 // DTO's
 import { CreatePersonDto } from './dto/create-person.dto';
@@ -44,8 +44,19 @@ export class PeopleController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.peopleService.findOne({id_person: id});
+  async findOne(@Param('id') id: number) {
+      // Llama al servicio para obtener una persona no eliminada
+  const person = await this.peopleService.findOne({
+    id_person: +id,
+    deletedAt: null,  // Verifica que la persona no esté eliminada
+  });
+
+  // Si la persona no existe o ha sido eliminada, lanzar una excepción
+  if (!person) {
+    throw new NotFoundException(`Person with ID ${id} not found or has been deleted`);
+  }
+
+    return person;
   }
 
   @Patch(':id')
