@@ -45,7 +45,7 @@ export class RestaurantsController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.restaurantsService.findOne({id_restaurant: id});
+    return this.restaurantsService.findOne({id_restaurant: + id, deletedAt: null});
   }
 
   @Patch(':id')
