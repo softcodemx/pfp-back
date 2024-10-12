@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateRestaurantDto {
   @IsString()
@@ -16,4 +16,8 @@ export class CreateRestaurantDto {
   @IsBoolean()
   @IsNotEmpty()
   is_pet_frendly: boolean;
+
+  @IsString()
+  @IsOptional() // The field 'photo' is optional
+  photo?: string;
 }

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, restaurants } from '@prisma/client';
 
 // DTO's
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
@@ -86,7 +86,12 @@ export class RestaurantsService {
     });
   } 
 
-  async uploapPicture() {
-    return 'Imagen subida';
+  async addRestaurantPhoto(id: number, photoPath: string): Promise<UpdateRestaurantDto> {
+    return this.prismaService.restaurants.update({
+      where: { id_restaurant: id },
+      data: { photo: photoPath }, // Here the field 'photo' update with the path
+    });
   }
+  
+  
 }

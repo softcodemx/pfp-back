@@ -44,4 +44,5 @@ model restaurants {
   createdAt       DateTime? @default(now())
   updatedAt       DateTime?
   deletedAt       DateTime?
+  photo           String?   // This field stores the path of the image.
 }
