@@ -62,7 +62,7 @@ export class PeopleController {
   @Patch(':id')
   update(@Param('id') id: number, @Body() updatePersonDto: UpdatePersonDto) {
     return this.peopleService.update({
-      where: { id_person: id },
+      where: { id_person: +id },
       data: {
         ...updatePersonDto,
       }
@@ -72,7 +72,7 @@ export class PeopleController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.peopleService.remove({
-      id_person: id,
+      id_person: +id,
     });
   }
 }

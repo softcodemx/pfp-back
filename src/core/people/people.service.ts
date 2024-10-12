@@ -70,8 +70,11 @@ export class PeopleService {
   }
 
   async remove(where: Prisma.peopleWhereUniqueInput): Promise<UpdatePersonDto> {
-    return this.prismaService.people.delete({
+    return this.prismaService.people.update({
       where,
+      data: {
+        deletedAt: new Date(),
+      }
     });
   }
 }
