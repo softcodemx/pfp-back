@@ -70,4 +70,9 @@ export class RestaurantsController {
       id_restaurant: restaurantId,
     });
   }
+
+  @Post()
+  uploadPicture() {
+    return this.restaurantsService.uploapPicture();
+  }
 }

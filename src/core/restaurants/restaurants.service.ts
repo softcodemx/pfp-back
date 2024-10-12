@@ -85,4 +85,8 @@ export class RestaurantsService {
       },
     });
   } 
+
+  async uploapPicture() {
+    return 'Imagen subida';
+  }
 }
