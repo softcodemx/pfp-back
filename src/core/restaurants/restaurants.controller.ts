@@ -102,9 +102,12 @@ export class RestaurantsController {
 async uploadPhoto(@UploadedFile() file: Express.Multer.File) { // Método asincrónico que maneja la carga del archivo.
   // Aquí puedes implementar la lógica para vincular la foto al restaurante.
   // Por ejemplo, puedes guardar el path de la foto en la base de datos.
+
+  const filePathh = `/uploads/restaurants/${file.filename}`;
+
   return {
     message: 'Photo uploaded successfully!', // Mensaje de éxito.
-    filePath: `/uploads/restaurants/${file.filename}`, // Ruta de acceso al archivo que fue subido.
+    filePath: filePathh, // Ruta de acceso al archivo que fue subido.
   };
 }
 

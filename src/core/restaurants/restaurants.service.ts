@@ -86,12 +86,13 @@ export class RestaurantsService {
     });
   } 
 
-  async addRestaurantPhoto(id: number, photoPath: string): Promise<UpdateRestaurantDto> {
+  async addRestaurantPhoto(id: number, filePathh: string): Promise<UpdateRestaurantDto> {
     return this.prismaService.restaurants.update({
       where: { id_restaurant: id },
-      data: { photo: photoPath }, // Here the field 'photo' update with the path
+        data: { photo: filePathh }, // Here the field 'photo' update with the path
     });
   }
   
   
 }
+  
