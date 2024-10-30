@@ -5,19 +5,21 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 // Services
-import { UsersService } from './users.service';
+import { UsersAbstract } from './users.abstract';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersAbstract: UsersAbstract
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.usersAbstract.create(createUserDto);
   }
 
   @Get()
-  findAll(
+  findAllWeb(
     @Query('take') take?: number,
     @Query('skip') skip?: number,
     @Query('search') search?: string,
@@ -32,7 +34,7 @@ export class UsersController {
         }
       : undefined;
 
-    return this.usersService.findAll({
+    return this.usersAbstract.findAll({
       skip: skip || undefined,
       take: take || undefined,
       where: { ...or },
@@ -44,12 +46,12 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.usersService.findOne({id_user: id});
+    return this.usersAbstract.findOne({id_user: id});
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update({
+    return this.usersAbstract.update({
       where: { id_user: id },
       data: {
         ...updateUserDto,
@@ -59,7 +61,7 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: number) {
-    return this.usersService.remove({
+    return this.usersAbstract.remove({
       id_user: id,
     });
   }

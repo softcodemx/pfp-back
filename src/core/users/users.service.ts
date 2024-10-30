@@ -8,12 +8,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 // Services
 import { PrismaService } from 'src/db/prisma.service';
+import { UsersAbstract } from './users.abstract';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends UsersAbstract {
   constructor(
     private readonly prismaService: PrismaService
-  ) {}
+  ) {
+    super();
+  }
 
   async create(createUserDto: CreateUserDto): Promise<UpdateUserDto> {
     //Verificamos si el usuario existe
